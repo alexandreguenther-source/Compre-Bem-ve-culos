@@ -1,14 +1,22 @@
 # CompreBem Veículos
 
-Sistema web de gestão para uma garagem de compra e venda de veículos: cadastro de **clientes** e do **estoque de carros**, com status de venda (disponível, reservado, vendido).
+Sistema web de gestão para uma garagem de compra e venda de veículos: cadastro de **clientes** e do **estoque de carros**, com status de venda (disponível, reservado, vendido) e **aviso ao cliente quando chega o carro que ele procura**.
 
 Feito só com **HTML, CSS e JavaScript**, usando **Bootstrap 5.3** (grid, cartões, formulários, modais e toasts). Não há servidor: os dados ficam no navegador (`localStorage`), e o sistema já abre com clientes e veículos de exemplo.
 
-## Problema e solução (resumo)
+## A dor do cliente e a solução
 
-**Problema:** em garagens pequenas, o estoque e os interessados ficam em caderno, planilha ou WhatsApp. O vendedor não sabe na hora quais carros estão disponíveis ou reservados, nem para quem, e perde tempo procurando dados do cliente e a ficha técnica do carro.
+**Dor: venda perdida por falta de retorno.** O cliente chega procurando um carro que a garagem não tem ("um Onix até R$ 65 mil"). O vendedor anota num papel ou no WhatsApp e esquece. Quando um carro assim entra no estoque, ninguém lembra de avisar, e o cliente já comprou em outra loja. A garagem perde uma venda que estava praticamente pronta.
 
-**Solução:** um painel único com o estoque e os clientes. Cada carro tem status de venda ligado ao cliente, o endereço do cliente é preenchido pelo CEP e a ficha técnica do carro vem de uma API.
+**Solução no sistema:**
+
+1. **Registrar a procura:** no cadastro do cliente, a seção *O que o cliente procura* guarda marca, modelo, ano mínimo e quanto ele pode pagar.
+2. **Cruzar com o estoque sozinho:** ao cadastrar um carro, o cartão *Clientes procurando este carro* mostra na hora, enquanto o vendedor digita, quem procura um carro assim.
+3. **Avisar em um clique:** a tela **Oportunidades** lista cada cliente com o carro que combina e o botão **Avisar no WhatsApp**, que abre a conversa com a mensagem pronta (modelo, ano, km e preço).
+4. **Não deixar esquecer:** o menu mostra quantos avisos estão pendentes, o painel exibe um alerta, e quem procura há mais de 14 dias aparece em vermelho.
+5. **Fechar o ciclo:** em *Já avisados*, o botão **Reservar** reserva o carro para o cliente, e a procura dele passa a constar como **atendida**.
+
+**Roteiro de demonstração (2 minutos):** entre no sistema e mostre o alerta do painel. Abra **Oportunidades** e avise a Mariana pelo WhatsApp. Depois cadastre um carro novo, *Chevrolet Onix LTZ 2021, R$ 63.900*: o cartão mostra na hora que a Luciana procura esse carro. Salve, avise a Luciana e clique em **Reservar**.
 
 ## Acesso de demonstração
 
@@ -24,6 +32,7 @@ Feito só com **HTML, CSS e JavaScript**, usando **Bootstrap 5.3** (grid, cartõ
 | Lista de clientes | `clientes.html` |
 | Cadastro / edição de cliente | `cliente-form.html` |
 | Lista de veículos | `veiculos.html` |
+| Oportunidades de venda | `oportunidades.html` |
 | Cadastro / edição de veículo | `veiculo-form.html` |
 | Configurações | `configuracoes.html` |
 
@@ -46,8 +55,15 @@ Todas as telas internas seguem o mesmo padrão: **cabeçalho** (logo, modo escur
 | RF11 | Exclusão com janela de confirmação e mensagens: sucesso ao excluir, erro ao tentar excluir cliente com veículo ou veículo já vendido. | `clientes.html`, `veiculos.html` |
 | RF12 | Filtro rápido de veículos por status com contador. | `veiculos.html` |
 | RF13 | Configurações: chave da API Ninjas com teste de conexão, restaurar dados de exemplo e apagar tudo. | `configuracoes.html` |
+| RF14 | Registrar o que o cliente procura (marca, modelo, ano mínimo, valor máximo, observação), mostrando na hora os carros do estoque que já atendem. | `cliente-form.html` |
+| RF15 | Ao cadastrar ou editar um carro, mostrar na hora os clientes que procuram um carro assim. | `veiculo-form.html` |
+| RF16 | Tela Oportunidades: clientes a avisar, aviso pelo WhatsApp com mensagem pronta, já avisados com atalho para reservar e clientes aguardando. Contador no menu e alerta no painel. | `oportunidades.html`, `painel.html` |
 
 Mensagens: salvar mostra aviso **verde de sucesso**; excluir mostra aviso **vermelho**; erro de formulário destaca os campos em vermelho e mostra um aviso.
+
+## Já usava a versão anterior?
+
+Os cadastros antigos continuam valendo, mas não têm procura registrada. Para ver a demonstração completa, vá em **Configurações → Restaurar dados de exemplo**.
 
 ## Chave da API Ninjas
 
@@ -75,12 +91,12 @@ As bibliotecas (Bootstrap, Bootstrap Icons, jQuery e DataTables) vêm de CDN, en
 
 ```
 index.html, painel.html, clientes.html, cliente-form.html,
-veiculos.html, veiculo-form.html, configuracoes.html
+veiculos.html, veiculo-form.html, oportunidades.html, configuracoes.html
 css/estilo.css          tema (cores da marca, modo escuro, placa Mercosul)
 img/logo.svg            logo do produto
 js/tema.js              modo escuro persistente
 js/config.js            chave da API Ninjas e usuário de demonstração
-js/dados.js             "banco de dados" no localStorage + dados de exemplo
+js/dados.js             "banco de dados" no localStorage, dados de exemplo e cruzamento procura x estoque
 js/util.js              mensagens, confirmação, máscaras, validações, DataTables
 js/apis.js              ViaCEP e API Ninjas
 js/layout.js            cabeçalho, menu lateral, rodapé e proteção por login
